@@ -1,39 +1,34 @@
 import { useState } from "react";
-import { v4 as uuidv4 } from "uuid"; //pnpm install uuid
 import { type TaskCardProps } from "../libs/Todolist";
-
+import {v4 as uuidv4} from "uuid";
 type props = {
-  onAdd: (todo: TaskCardProps) => void;
+  onAdd:(todo:TaskCardProps)=>void;
 };
-//1.สร้าง modal ก่อน
-export default function Modal({ onAdd }: props) {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  //4.ใช้ usestate reset value
-  const handleSubmit = () => {
-    if (title.trim()) {
-      const newtodo = {
-        id: uuidv4(),
-        title,
-        description,
-        isDone: false,
-      };
-      onAdd(newtodo);
-      setTitle("");
-      setDescription("");
+
+export default function Modal({onAdd}:props) {
+  const[title,setTitle] = useState("");
+  const [description,setDescription] = useState("");
+  const titleOnchange = (event:any)=>{
+    setTitle(event?.target.value);
+  };
+  const desOnchange = (event:any)=>{
+    setDescription(event?.target.value);
+  };
+  const submitSave =()=>{
+    if(title.trim()){
+    const newtodo = {
+      id: uuidv4(),
+      title ,
+      description ,
+      isDone:false,
+    }
+    onAdd(newtodo);
+    setTitle("");
+    setDescription("");
     }
   };
-  //3. Onchange text ให้เรียบร้อย
-  const titleOnchange = (event: any) => {
-    setTitle(event.target.value);
-  };
-
-  const descriptionOnchang = (event: any) => {
-    setDescription(event.target.value);
-  };
-
   return (
-    <div className="modal fade" id="todoModal" tabIndex={-1}>
+    <div className="modal fade" id="todoModal" tabIndex={-1} aria-hidden="true">
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">
@@ -57,7 +52,7 @@ export default function Modal({ onAdd }: props) {
               className="form-control"
               placeholder="description..."
               value={description}
-              onChange={descriptionOnchang}
+              onChange = {desOnchange}
             ></textarea>
           </div>
           <div className="modal-footer">
@@ -69,11 +64,7 @@ export default function Modal({ onAdd }: props) {
             >
               Cancel
             </button>
-            <button
-              type="button"
-              className="btn btn-success"
-              onClick={handleSubmit}
-            >
+            <button type="button" className="btn btn-success" onClick={submitSave}>
               Save
             </button>
           </div>
